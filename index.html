@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="./logo.png" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yawmi - متتبع الدايت اليومي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0b0f0c;
+      --bg-card: #131915;
+      --bg-input: #1a221d;
+      --border-color: #26332a;
+      --primary: #39e639;
+      --primary-dark: #25b825;
+      --primary-glow: rgba(57, 230, 57, 0.16);
+      --text-main: #f3f7f4;
+      --text-muted: #98a89d;
+      --danger: #ff5252;
+      --danger-bg: rgba(255, 82, 82, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px 14px 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 980px;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 6px 16px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    .app-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .app-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 3px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 24px 18px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* الأزرار العامة */
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, background-color 0.2s ease, opacity 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #071107;
+      font-weight: 800;
+    }
+
+    .btn-primary:hover {
+      background-color: #4df04d;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-input);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid rgba(255, 82, 82, 0.35);
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    /* الحقول */
+    .form-group {
+      margin-bottom: 14px;
+      text-align: right;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .input-field {
+      width: 100%;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field::placeholder {
+      color: rgba(152, 168, 157, 0.45);
+    }
+
+    .input-field:focus {
+      border-color: var(--primary);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* شاشة تسجيل الدخول */
+    .auth-box {
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .auth-title {
+      font-size: 21px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .auth-sub {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .btn-social {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid var(--border-color);
+      transition: transform 0.12s ease, border-color 0.2s ease;
+    }
+
+    .btn-social:active {
+      transform: scale(0.98);
+    }
+
+    .btn-icloud {
+      background-color: #ffffff;
+      color: #111111;
+    }
+
+    .btn-google {
+      background-color: var(--bg-input);
+      color: var(--text-main);
+    }
+
+    .btn-google:hover {
+      border-color: var(--primary);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin: 16px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .divider span {
+      padding: 0 12px;
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .auth-switch button {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 14px;
+    }
+
+    .error-msg {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    /* نافذة الدخول السريع */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 1000;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px;
+      width: 100%;
+      max-width: 390px;
+    }
+
+    /* صورة البروفايل */
+    .avatar-upload-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .avatar-preview {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background-color: var(--bg-input);
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* الصفحة الرئيسية */
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+
+    .profile-account-tag {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .profile-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .metric-box {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px 8px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .metric-label {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .home-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* شاشة التتبع اليومي */
+    .tracker-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tracker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tracker-item {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .tracker-item.is-yes {
+      border-color: rgba(57, 230, 57, 0.55);
+    }
+
+    .tracker-item.is-no {
+      border-color: rgba(255, 82, 82, 0.45);
+    }
+
+    .tracker-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tracker-info h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .tracker-info span {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .choice-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .choice-btn {
+      width: 44px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-muted);
+      font-size: 17px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .choice-btn.active-yes {
+      background-color: var(--primary-glow);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .choice-btn.active-no {
+      background-color: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .note-input-wrap {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meal-extra-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 8px;
+    }
+
+    .note-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px dashed var(--primary);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      outline: none;
+    }
+
+    .note-input::placeholder {
+      color: rgba(243, 247, 244, 0.35);
+    }
+
+    .cal-input {
+      width: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14.5px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .cal-input::placeholder {
+      color: rgba(152, 168, 157, 0.45);
+      font-weight: 400;
+    }
+
+    /* شاشة الجدول والتقارير */
+    .report-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 13px;
+      border-radius: 10px;
+    }
+
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .stat-pill {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .stat-pill strong {
+      display: block;
+      font-size: 16px;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+      background-color: var(--bg-input);
+    }
+
+    th, td {
+      padding: 11px 9px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13.5px;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #17211a;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    tfoot td {
+      background-color: #141d17;
+      font-weight: 800;
+      color: var(--primary);
+      border-top: 2px solid var(--border-color);
+      border-bottom: none;
+    }
+
+    .cell-note {
+      display: block;
+      font-size: 11.5px;
+      color: #b7e4c7;
+      margin-top: 3px;
+      font-weight: 600;
+      max-width: 135px;
+      white-space: normal;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cell-cal {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 2px 7px;
+      border-radius: 7px;
+      font-size: 11.5px;
+      font-weight: 800;
+      background-color: var(--primary-glow);
+      color: var(--primary);
+    }
+
+    .total-cal-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 800;
+      background-color: var(--primary-glow);
+      color: var(--primary);
+      border: 1px solid rgba(57, 230, 57, 0.35);
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .score-high { background-color: var(--primary-glow); color: var(--primary); }
+    .score-mid { background-color: rgba(255, 193, 7, 0.16); color: #ffd54f; }
+    .score-low { background-color: var(--danger-bg); color: var(--danger); }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 5px 7px;
+      border-radius: 8px;
+      transition: background-color 0.15s ease;
+    }
+
+    .icon-btn:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* صندوق تعديل التاريخ واليوم */
+    .edit-date-box {
+      background-color: var(--bg-input);
+      border: 1px solid var(--primary);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    /* سجل المعلومات */
+    .info-box {
+      margin-top: 20px;
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .info-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 14px;
+    }
+
+    .info-box-header h3 {
+      color: var(--primary);
+      font-size: 18px;
+    }
+
+    .user-summary-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .info-section-title {
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 800;
+      margin: 16px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed var(--border-color);
+    }
+
+    .req-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 14px;
+    }
+
+    .food-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .food-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      gap: 10px;
+    }
+
+    .food-name {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .food-qty {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .cal-pill {
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .cal-allowed {
+      background-color: var(--primary-glow);
+      color: var(--primary);
+    }
+
+    .cal-forbidden {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    @media (max-width: 600px) {
+      .meal-extra-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header class="app-header">
+      <div class="brand-badge">
+        <span class="brand-dot"></span>
+        <h1>Yawmi</h1>
+      </div>
+      <p id="current-date-display"></p>
+    </header>
+
+    <!-- 1. شاشة تسجيل الدخول / إنشاء حساب -->
+    <section id="auth-screen" class="card auth-box">
+      <h2 class="auth-title" id="auth-heading">تسجيل الدخول</h2>
+      <p class="auth-sub">سجل دخولك لحفظ متابعتك اليومية وبياناتك الشخصية</p>
+
+      <div id="auth-error" class="error-msg hidden"></div>
+
+      <div class="social-buttons">
+        <button type="button" class="btn-social btn-icloud" onclick="openSocialModal('iCloud')">
+          <span></span>
+          <span>المتابعة باستخدام iCloud</span>
+        </button>
+        <button type="button" class="btn-social btn-google" onclick="openSocialModal('Google')">
+          <span style="color:#39e639; font-weight:900;">G</span>
+          <span>المتابعة باستخدام Google Account</span>
+        </button>
+      </div>
+
+      <div class="divider"><span>أو بالبريد الإلكتروني</span></div>
+
+      <form id="auth-form" onsubmit="handleEmailAuth(event)">
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="auth-email" class="input-field" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group">
+          <label>كلمة المرور</label>
+          <input type="password" id="auth-password" class="input-field" placeholder="••••••••" minlength="4" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="auth-submit-btn">تسجيل الدخول</button>
+      </form>
+
+      <div class="auth-switch">
+        <span id="auth-switch-text">ليس لديك حساب؟</span>
+        <button type="button" id="auth-switch-btn" onclick="toggleAuthMode()">إنشاء حساب جديد</button>
+      </div>
+    </section>
+
+    <!-- نافذة الدخول السريع عبر Google أو iCloud -->
+    <div id="social-modal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <h3 id="social-modal-title" style="color: var(--primary); margin-bottom: 8px;">تسجيل الدخول</h3>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 14px;">
+          أدخل بريدك المرتبط بالحساب للمتابعة:
+        </p>
+        <form onsubmit="confirmSocialLogin(event)">
+          <div class="form-group">
+            <label id="social-email-label">البريد الإلكتروني</label>
+            <input type="email" id="social-email-input" class="input-field" placeholder="name@icloud.com" required>
+          </div>
+          <div style="display: flex; gap: 8px; margin-top: 14px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">متابعة</button>
+            <button type="button" class="btn btn-secondary" onclick="closeSocialModal()">إلغاء</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 2. شاشة إعداد البروفايل بعد تسجيل الدخول -->
+    <section id="setup-screen" class="card auth-box hidden">
+      <h2 class="auth-title">إعداد ملفك الشخصي</h2>
+      <p class="auth-sub">أدخل بياناتك الأساسية لحساب احتياجاتك ومتابعة تقدمك</p>
+
+      <div class="avatar-upload-wrap">
+        <div class="avatar-preview" id="setup-avatar-preview">👤</div>
+        <label for="setup-photo-input" class="btn btn-secondary btn-sm" style="cursor:pointer;">
+          + إضافة صورة شخصية (اختياري)
+        </label>
+        <input type="file" id="setup-photo-input" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+      </div>
+
+      <form onsubmit="saveProfileSetup(event)">
+        <div class="form-group">
+          <label>الاسم بالكامل</label>
+          <input type="text" id="setup-name" class="input-field" placeholder="اكتب اسمك بالكامل" required>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>السن (سنة)</label>
+            <input type="number" id="setup-age" class="input-field" placeholder="مثال: 22" min="10" max="100" required>
+          </div>
+          <div class="form-group">
+            <label>الطول (سم)</label>
+            <input type="number" id="setup-height" class="input-field" placeholder="مثال: 172" min="100" max="250" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>الوزن الحالي (كجم)</label>
+          <input type="number" step="0.1" id="setup-weight" class="input-field" placeholder="مثال: 78" min="30" max="300" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full">حفظ والدخول للصفحة الرئيسية</button>
+      </form>
+    </section>
+
+    <!-- 3. الصفحة الرئيسية (البروفايل) -->
+    <section id="home-screen" class="card hidden">
+      <div class="profile-header">
+        <div class="avatar-preview" id="home-avatar">👤</div>
+        <h2 class="profile-name" id="home-name">--</h2>
+        <div class="profile-account-tag" id="home-provider-tag">--</div>
+      </div>
+
+      <div class="profile-metrics">
+        <div class="metric-box">
+          <div class="metric-value" id="home-age">--</div>
+          <div class="metric-label">السن (سنة)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-value" id="home-height">--</div>
+          <div class="metric-label">الطول (سم)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-value" id="home-weight">--</div>
+          <div class="metric-label">الوزن (كجم)</div>
+        </div>
+      </div>
+
+      <div class="home-actions">
+        <button type="button" class="btn btn-primary btn-full" onclick="openDailyTracker()">
+          تسجيل اليوم
+        </button>
+        <button type="button" class="btn btn-secondary btn-full" onclick="openReportScreen()">
+          عرض الجدول وسجل المعلومات
+        </button>
+        <div class="grid-2" style="margin-top: 4px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="editProfile()">تعديل بياناتي</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="logoutUser()">تسجيل الخروج</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. شاشة تسجيل بنود اليوم -->
+    <section id="tracker-screen" class="card hidden">
+      <div class="tracker-top-bar">
+        <div>
+          <h2 style="font-size: 19px; color: var(--primary);">متابعة التزام اليوم</h2>
+          <span style="font-size: 12.5px; color: var(--text-muted);">اختر ✅ أو ❌ لكل بند وسجل التفاصيل والسعرات للوجبات</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="goHome()">← الرئيسية</button>
+      </div>
+
+      <div class="tracker-list" id="tracker-list"></div>
+
+      <div style="margin-top: 20px;">
+        <button type="button" class="btn btn-primary btn-full" onclick="submitDailyTracker()">
+          إظهار التقرير
+        </button>
+      </div>
+    </section>
+
+    <!-- 5. شاشة الجدول والتقارير وسجل المعلومات -->
+    <section id="report-screen" class="card hidden">
+      <div class="report-top-bar">
+        <h2 style="font-size: 19px; color: var(--primary);">جدول المتابعة اليومي</h2>
+        <div class="report-actions" id="report-default-actions">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="goHome()">الصفحة الرئيسية</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="openDailyTracker()">+ تسجيل اليوم</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="toggleInfoBox()">سجل المعلومات</button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="askClearAll()">مسح الكل</button>
+        </div>
+        <div class="report-actions hidden" id="report-confirm-clear">
+          <span style="font-size: 13px; color: var(--danger);">تأكيد مسح كل الجداول؟</span>
+          <button type="button" class="btn btn-danger btn-sm" onclick="clearAllRecords()">نعم، امسح</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="cancelClearAll()">إلغاء</button>
+        </div>
+      </div>
+
+      <!-- نموذج تعديل اليوم والتاريخ لصف محدد -->
+      <div id="edit-date-box" class="edit-date-box hidden">
+        <div style="font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 10px;">
+          تعديل اليوم والتاريخ للسجل المختار
+        </div>
+        <div class="grid-2">
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label>اليوم</label>
+            <select id="edit-day-select" class="input-field">
+              <option value="السبت">السبت</option>
+              <option value="الأحد">الأحد</option>
+              <option value="الإثنين">الإثنين</option>
+              <option value="الثلاثاء">الثلاثاء</option>
+              <option value="الأربعاء">الأربعاء</option>
+              <option value="الخميس">الخميس</option>
+              <option value="الجمعة">الجمعة</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label>التاريخ</label>
+            <input type="date" id="edit-date-input" class="input-field">
+          </div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="saveEditedDate()">حفظ التعديل</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeEditDateBox()">إلغاء</button>
+        </div>
+      </div>
+
+      <div class="stats-strip" id="stats-strip"></div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>اليوم</th>
+              <th>التاريخ</th>
+              <th>وجبة الفطار</th>
+              <th>وجبة الغدا</th>
+              <th>وجبة العشا</th>
+              <th>المياه</th>
+              <th>السكر</th>
+              <th>الجيم</th>
+              <th>الخطوات</th>
+              <th>إجمالي السعرات</th>
+              <th>الالتزام</th>
+              <th>تعديل / حذف</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+          <tfoot id="table-foot"></tfoot>
+        </table>
+      </div>
+
+      <!-- سجل المعلومات -->
+      <div id="info-box" class="info-box hidden">
+        <div class="info-box-header">
+          <h3>سجل المعلومات والنظام الغذائي</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="toggleInfoBox()">إغلاق</button>
+        </div>
+
+        <div class="user-summary-card" id="info-user-summary"></div>
+
+        <div class="info-section-title">المتطلبات اليومية</div>
+        <ul class="req-list">
+          <li>(1) مشي يومي لمدة ساعة / 5000 خطوة على الأقل</li>
+          <li>(2) معلقة أو معلقتين سكر كحد أقصى في اليوم</li>
+          <li>(3) عجز في السعرات لا يقل عن 300 سعرة حرارية</li>
+          <li>(4) شرب مياه لا تقل عن 2 لتر في اليوم</li>
+        </ul>
+
+        <div class="info-section-title">المسموح في الدايت (بالكمية والسعرات)</div>
+        <div class="food-grid" id="allowed-foods-list"></div>
+
+        <div class="info-section-title" style="color: var(--danger);">الممنوع في الدايت (بالكمية والسعرات)</div>
+        <div class="food-grid" id="forbidden-foods-list"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const TRACK_ITEMS = [
+      { key: "breakfast", label: "وجبة الفطار", hint: "سجل تفاصيل الوجبة وعدد السعرات", placeholder: "مثال: 2 بيضة مسلوقة + نص رغيف أسمر", hasCalories: true },
+      { key: "lunch", label: "وجبة الغدا", hint: "سجل تفاصيل الوجبة وعدد السعرات", placeholder: "مثال: 150 جم فراخ مشوية + 5 معالق أرز + سلطة", hasCalories: true },
+      { key: "dinner", label: "وجبة العشا", hint: "سجل تفاصيل الوجبة وعدد السعرات", placeholder: "مثال: 100 جم جبنة قريش + خيار", hasCalories: true },
+      { key: "water", label: "المياه", hint: "الهدف اليومي: 2 لتر أو أكثر", placeholder: "مثال: 2.5 لتر", hasCalories: false },
+      { key: "sugar", label: "السكر", hint: "الالتزام بالحد المسموح أو بديل دايت", placeholder: "مثال: معلقة واحدة فقط", hasCalories: false },
+      { key: "gym", label: "الجيم", hint: "نوع التمرين الذي تم أداؤه", placeholder: "مثال: تمارين مقاومة + كارديو", hasCalories: false },
+      { key: "steps", label: "الخطوات", hint: "الهدف: 5000 خطوة أو مشي ساعة", placeholder: "مثال: 6500 خطوة", hasCalories: false }
+    ];
+
+    const MEAL_KEYS = ["breakfast", "lunch", "dinner"];
+
+    const ALLOWED_FOODS = [
+      { name: "صدور فراخ مشوية أو مسلوقة", qty: "100 جرام", cal: "165 سعرة" },
+      { name: "لحمة حمراء مشوية أو مسلوقة", qty: "100 جرام", cal: "210 سعرة" },
+      { name: "سمك مشوي (بلطي أو بوري)", qty: "100 جرام", cal: "130 سعرة" },
+      { name: "تونة مصفاة من الزيت (أو بالماء)", qty: "علبة 140 جرام", cal: "150 سعرة" },
+      { name: "بيض مسلوق", qty: "1 بيضة كبيرة", cal: "72 سعرة" },
+      { name: "جبنة قريش", qty: "100 جرام", cal: "98 سعرة" },
+      { name: "شوفان حبة كاملة", qty: "40 جرام (4 معالق)", cal: "150 سعرة" },
+      { name: "بطاطا حلوة مشوية", qty: "100 جرام", cal: "86 سعرة" },
+      { name: "فول مدمس بدون زيت أو بزيت خفيف", qty: "4 معالق كبيرة", cal: "110 سعرة" },
+      { name: "أرز بسمتي أو أبيض مسلوق", qty: "5 معالق كبيرة", cal: "130 سعرة" },
+      { name: "عيش بلدي أسمر", qty: "نصف رغيف (50 جرام)", cal: "135 سعرة" },
+      { name: "خضروات ورقية وسلطة (خيار، خس، كرفس، بقدونس)", qty: "طبق كبير", cal: "35 سعرة" },
+      { name: "شاي / شاي أخضر / قهوة سادة", qty: "كوب بدون سكر", cal: "2 سعرة" },
+      { name: "بيبسي دايت (مرة واحدة أسبوعياً)", qty: "كان 330 مل", cal: "1 سعرة" }
+    ];
+
+    const FORBIDDEN_FOODS = [
+      { name: "المقليات (بطاطس محمرة، طعمية، بانيه مقلي)", qty: "100 جرام", cal: "320 - 410 سعرة" },
+      { name: "الحلويات الشرقية (كنافة، بسبوسة، جلاش)", qty: "قطعة متوسطة (100 جرام)", cal: "420 سعرة" },
+      { name: "المشروبات الغازية العادية والعصائر المعلبة", qty: "عبوة 330 مل", cal: "140 - 160 سعرة" },
+      { name: "المخبوزات والفينو والكرواسون", qty: "قطعة واحدة (80 جرام)", cal: "290 سعرة" },
+      { name: "الوجبات السريعة (برجر، بيتزا، شاورما دسمة)", qty: "وجبة متوسطة", cal: "750 - 1100 سعرة" },
+      { name: "الشيبسي والمقرمشات المقلية", qty: "كيس عائلي صغير (70 جرام)", cal: "375 سعرة" },
+      { name: "السمنة الصناعي والزيوت المهدرجة والصوصات الدسمة", qty: "ملعقة كبيرة (15 جرام)", cal: "135 سعرة" },
+      { name: "السكر الأبيض الزائد عن المسموح", qty: "ملعقة كبيرة", cal: "50 سعرة" }
+    ];
+
+    let isRegisterMode = false;
+    let selectedSocialProvider = "";
+    let tempPhotoBase64 = "";
+    let dailyState = {};
+    let editingRecordIndex = null;
+
+    const STORAGE_USERS_KEY = "yawmi_users_v1";
+    const STORAGE_CURRENT_KEY = "yawmi_current_user_v1";
+
+    function getTodayDetails() {
+      const now = new Date();
+      const days = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+      const dayName = days[now.getDay()];
+      const day = String(now.getDate()).padStart(2, "0");
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const year = now.getFullYear();
+      return {
+        dayName,
+        fullDate: `${day}/${month}/${year}`,
+        isoDate: `${year}-${month}-${day}`
+      };
+    }
+
+    const todayInfo = getTodayDetails();
+    document.getElementById("current-date-display").innerText = `اليوم: ${todayInfo.dayName} - التاريخ: ${todayInfo.fullDate}`;
+
+    function getUsersDB() {
+      return JSON.parse(localStorage.getItem(STORAGE_USERS_KEY)) || {};
+    }
+
+    function saveUsersDB(db) {
+      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(db));
+    }
+
+    function getCurrentEmail() {
+      return localStorage.getItem(STORAGE_CURRENT_KEY);
+    }
+
+    function setCurrentEmail(email) {
+      if (email) {
+        localStorage.setItem(STORAGE_CURRENT_KEY, email);
+      } else {
+        localStorage.removeItem(STORAGE_CURRENT_KEY);
+      }
+    }
+
+    function getCurrentUser() {
+      const email = getCurrentEmail();
+      if (!email) return null;
+      const db = getUsersDB();
+      return db[email] || null;
+    }
+
+    function updateCurrentUser(updatedUser) {
+      const db = getUsersDB();
+      db[updatedUser.email] = updatedUser;
+      saveUsersDB(db);
+    }
+
+    function showScreen(screenId) {
+      ["auth-screen", "setup-screen", "home-screen", "tracker-screen", "report-screen"].forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+      });
+      document.getElementById(screenId).classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    window.onload = function () {
+      renderStaticFoodLists();
+      const user = getCurrentUser();
+      if (!user) {
+        showScreen("auth-screen");
+      } else if (!user.profile || !user.profile.name) {
+        openSetupScreen(user);
+      } else {
+        goHome();
+      }
+    };
+
+    /* ================= نظام تسجيل الدخول ================= */
+    function toggleAuthMode() {
+      isRegisterMode = !isRegisterMode;
+      document.getElementById("auth-error").classList.add("hidden");
+      document.getElementById("auth-heading").innerText = isRegisterMode ? "إنشاء حساب جديد" : "تسجيل الدخول";
+      document.getElementById("auth-submit-btn").innerText = isRegisterMode ? "إنشاء الحساب والمتابعة" : "تسجيل الدخول";
+      document.getElementById("auth-switch-text").innerText = isRegisterMode ? "لديك حساب بالفعل؟" : "ليس لديك حساب؟";
+      document.getElementById("auth-switch-btn").innerText = isRegisterMode ? "تسجيل الدخول" : "إنشاء حساب جديد";
+    }
+
+    function showAuthError(msg) {
+      const el = document.getElementById("auth-error");
+      el.innerText = msg;
+      el.classList.remove("hidden");
+    }
+
+    function handleEmailAuth(e) {
+      e.preventDefault();
+      const email = document.getElementById("auth-email").value.trim().toLowerCase();
+      const password = document.getElementById("auth-password").value;
+      const db = getUsersDB();
+
+      if (isRegisterMode) {
+        if (db[email]) {
+          showAuthError("هذا البريد مسجل بالفعل، يمكنك تسجيل الدخول مباشرة.");
+          return;
+        }
+        db[email] = {
+          email,
+          password,
+          provider: "حساب التطبيق",
+          profile: null,
+          records: []
+        };
+        saveUsersDB(db);
+        setCurrentEmail(email);
+        openSetupScreen(db[email]);
+      } else {
+        const user = db[email];
+        if (!user) {
+          showAuthError("لا يوجد حساب بهذا البريد، اضغط على إنشاء حساب جديد.");
+          return;
+        }
+        if (user.password && user.password !== password) {
+          showAuthError("كلمة المرور غير صحيحة.");
+          return;
+        }
+        setCurrentEmail(email);
+        if (!user.profile || !user.profile.name) {
+          openSetupScreen(user);
+        } else {
+          goHome();
+        }
+      }
+    }
+
+    function openSocialModal(provider) {
+      selectedSocialProvider = provider;
+      document.getElementById("social-modal-title").innerText = `المتابعة عبر ${provider}`;
+      document.getElementById("social-email-label").innerText =
+        provider === "iCloud" ? "بريد Apple ID / iCloud" : "بريد Google / Gmail";
+      document.getElementById("social-email-input").placeholder =
+        provider === "iCloud" ? "username@icloud.com" : "username@gmail.com";
+      document.getElementById("social-email-input").value = "";
+      document.getElementById("social-modal").classList.remove("hidden");
+    }
+
+    function closeSocialModal() {
+      document.getElementById("social-modal").classList.add("hidden");
+    }
+
+    function confirmSocialLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById("social-email-input").value.trim().toLowerCase();
+      if (!email) return;
+
+      const db = getUsersDB();
+      if (!db[email]) {
+        db[email] = {
+          email,
+          password: "",
+          provider: selectedSocialProvider,
+          profile: null,
+          records: []
+        };
+        saveUsersDB(db);
+      }
+      setCurrentEmail(email);
+      closeSocialModal();
+
+      if (!db[email].profile || !db[email].profile.name) {
+        openSetupScreen(db[email]);
+      } else {
+        goHome();
+      }
+    }
+
+    function logoutUser() {
+      setCurrentEmail(null);
+      document.getElementById("auth-form").reset();
+      document.getElementById("auth-error").classList.add("hidden");
+      showScreen("auth-screen");
+    }
+
+    /* ================= إعداد البروفايل ================= */
+    function openSetupScreen(user) {
+      tempPhotoBase64 = (user.profile && user.profile.photo) || "";
+      document.getElementById("setup-name").value = (user.profile && user.profile.name) || "";
+      document.getElementById("setup-age").value = (user.profile && user.profile.age) || "";
+      document.getElementById("setup-height").value = (user.profile && user.profile.height) || "";
+      document.getElementById("setup-weight").value = (user.profile && user.profile.weight) || "";
+      renderAvatarElement(document.getElementById("setup-avatar-preview"), tempPhotoBase64, (user.profile && user.profile.name) || "");
+      showScreen("setup-screen");
+    }
+
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const maxSize = 240;
+          let w = img.width;
+          let h = img.height;
+          if (w > h) {
+            if (w > maxSize) { h *= maxSize / w; w = maxSize; }
+          } else {
+            if (h > maxSize) { w *= maxSize / h; h = maxSize; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          tempPhotoBase64 = canvas.toDataURL("image/jpeg", 0.8);
+          renderAvatarElement(document.getElementById("setup-avatar-preview"), tempPhotoBase64, document.getElementById("setup-name").value);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderAvatarElement(container, photo, name) {
+      if (photo) {
+        container.innerHTML = `<img src="${photo}" alt="صورة المستخدم">`;
+      } else if (name && name.trim()) {
+        container.innerText = name.trim().charAt(0);
+      } else {
+        container.innerText = "👤";
+      }
+    }
+
+    function saveProfileSetup(e) {
+      e.preventDefault();
+      const user = getCurrentUser();
+      if (!user) return;
+
+      user.profile = {
+        name: document.getElementById("setup-name").value.trim(),
+        age: Number(document.getElementById("setup-age").value),
+        height: Number(document.getElementById("setup-height").value),
+        weight: Number(document.getElementById("setup-weight").value),
+        photo: tempPhotoBase64
+      };
+      updateCurrentUser(user);
+      goHome();
+    }
+
+    function editProfile() {
+      const user = getCurrentUser();
+      if (user) openSetupScreen(user);
+    }
+
+    /* ================= الصفحة الرئيسية ================= */
+    function goHome() {
+      const user = getCurrentUser();
+      if (!user || !user.profile) {
+        showScreen("auth-screen");
+        return;
+      }
+      const p = user.profile;
+      document.getElementById("home-name").innerText = p.name;
+      document.getElementById("home-provider-tag").innerText = `${user.provider} • ${user.email}`;
+      document.getElementById("home-age").innerText = p.age;
+      document.getElementById("home-height").innerText = p.height;
+      document.getElementById("home-weight").innerText = p.weight;
+      renderAvatarElement(document.getElementById("home-avatar"), p.photo, p.name);
+      showScreen("home-screen");
+    }
+
+    /* ================= شاشة التتبع اليومي ================= */
+    function openDailyTracker() {
+      dailyState = {};
+      TRACK_ITEMS.forEach(item => {
+        dailyState[item.key] = { status: false, note: "", calories: 0 };
+      });
+      renderTrackerList();
+      showScreen("tracker-screen");
+    }
+
+    function renderTrackerList() {
+      const container = document.getElementById("tracker-list");
+      container.innerHTML = "";
+
+      TRACK_ITEMS.forEach(item => {
+        const state = dailyState[item.key];
+        const cardClass = state.status === true ? "is-yes" : (state.status === false ? "is-no" : "");
+
+        const extraFieldsHtml = item.hasCalories
+          ? `
+            <div class="meal-extra-grid">
+              <input
+                type="text"
+                class="note-input"
+                id="note-input-${item.key}"
+                placeholder="${item.placeholder}"
+                value="${escapeHtml(state.note)}"
+                oninput="updateItemNote('${item.key}', this.value)"
+              />
+              <input
+                type="number"
+                min="0"
+                step="1"
+                class="cal-input"
+                id="cal-input-${item.key}"
+                placeholder="السعرات (مثال: 350)"
+                value="${state.calories > 0 ? state.calories : ""}"
+                oninput="updateItemCalories('${item.key}', this.value)"
+              />
+            </div>
+          `
+          : `
+            <input
+              type="text"
+              class="note-input"
+              id="note-input-${item.key}"
+              placeholder="${item.placeholder}"
+              value="${escapeHtml(state.note)}"
+              oninput="updateItemNote('${item.key}', this.value)"
+            />
+          `;
+
+        const div = document.createElement("div");
+        div.className = `tracker-item ${cardClass}`;
+        div.id = `item-card-${item.key}`;
+
+        div.innerHTML = `
+          <div class="tracker-row">
+            <div class="tracker-info">
+              <h3>${item.label}</h3>
+              <span>${item.hint}</span>
+            </div>
+            <div class="choice-group">
+              <button type="button" class="choice-btn ${state.status === true ? "active-yes" : ""}" onclick="setItemChoice('${item.key}', true)" title="تم">✅</button>
+              <button type="button" class="choice-btn ${state.status === false ? "active-no" : ""}" onclick="setItemChoice('${item.key}', false)" title="لم يتم">❌</button>
+            </div>
+          </div>
+          <div class="note-input-wrap ${state.status === true ? "" : "hidden"}" id="note-wrap-${item.key}">
+            ${extraFieldsHtml}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function setItemChoice(key, isYes) {
+      dailyState[key].status = isYes;
+      if (!isYes) {
+        dailyState[key].note = "";
+        dailyState[key].calories = 0;
+      }
+      renderTrackerList();
+      if (isYes) {
+        const inputEl = document.getElementById(`note-input-${key}`);
+        if (inputEl) inputEl.focus();
+      }
+    }
+
+    function updateItemNote(key, val) {
+      dailyState[key].note = val;
+    }
+
+    function updateItemCalories(key, val) {
+      const parsed = parseFloat(val);
+      dailyState[key].calories = isNaN(parsed) || parsed < 0 ? 0 : parsed;
+    }
+
+    function submitDailyTracker() {
+      const user = getCurrentUser();
+      if (!user) return;
+
+      const d = getTodayDetails();
+      const newRecord = {
+        id: Date.now(),
+        day: d.dayName,
+        date: d.fullDate,
+        isoDate: d.isoDate,
+        items: JSON.parse(JSON.stringify(dailyState))
+      };
+
+      user.records = user.records || [];
+      user.records.unshift(newRecord);
+      updateCurrentUser(user);
+      openReportScreen();
+    }
+
+    /* ================= حساب السعرات والالتزام ================= */
+    function getMealCalories(record, mealKey) {
+      const item = record.items && record.items[mealKey];
+      if (!item || !item.status) return 0;
+      const cal = parseFloat(item.calories);
+      return isNaN(cal) || cal < 0 ? 0 : cal;
+    }
+
+    function calcDayTotalCalories(record) {
+      return MEAL_KEYS.reduce((sum, k) => sum + getMealCalories(record, k), 0);
+    }
+
+    function calcRecordScore(record) {
+      const keys = TRACK_ITEMS.map(i => i.key);
+      const done = keys.filter(k => record.items && record.items[k] && record.items[k].status === true).length;
+      const pct = Math.round((done / keys.length) * 100);
+      return { done, total: keys.length, pct };
+    }
+
+    /* ================= شاشة الجدول وسجل المعلومات ================= */
+    function openReportScreen() {
+      cancelClearAll();
+      closeEditDateBox();
+      renderTable();
+      renderUserInfoSummary();
+      showScreen("report-screen");
+    }
+
+    function renderStats(records) {
+      const strip = document.getElementById("stats-strip");
+      if (!records.length) {
+        strip.innerHTML = "";
+        return;
+      }
+      const totalDays = records.length;
+      const avgPct = Math.round(records.reduce((sum, r) => sum + calcRecordScore(r).pct, 0) / totalDays);
+      const avgCalories = Math.round(records.reduce((sum, r) => sum + calcDayTotalCalories(r), 0) / totalDays);
+
+      strip.innerHTML = `
+        <div class="stat-pill">الأيام المسجلة<strong>${totalDays}</strong></div>
+        <div class="stat-pill">متوسط الالتزام<strong>${avgPct}%</strong></div>
+        <div class="stat-pill">متوسط السعرات اليومية<strong>${avgCalories} سعرة</strong></div>
+      `;
+    }
+
+    function renderCellContent(record, itemKey, isMeal) {
+      const itemObj = record.items && record.items[itemKey];
+      if (!itemObj || !itemObj.status) {
+        return `<span style="color: var(--danger); font-weight: bold;">❌</span>`;
+      }
+
+      const noteHtml = itemObj.note && itemObj.note.trim()
+        ? `<span class="cell-note">${escapeHtml(itemObj.note.trim())}</span>`
+        : "";
+
+      const calVal = isMeal ? getMealCalories(record, itemKey) : 0;
+      const calHtml = isMeal
+        ? `<span class="cell-cal">${calVal} سعرة</span>`
+        : "";
+
+      return `<span style="color: var(--primary); font-weight: bold;">✅</span>${noteHtml}${calHtml}`;
+    }
+
+    function renderTable() {
+      const user = getCurrentUser();
+      const records = (user && user.records) || [];
+      renderStats(records);
+
+      const tbody = document.getElementById("table-body");
+      const tfoot = document.getElementById("table-foot");
+      tbody.innerHTML = "";
+      tfoot.innerHTML = "";
+
+      if (records.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="12" style="padding: 24px; color: var(--text-muted);">
+              لا توجد أيام مسجلة حتى الآن. اضغط على "+ تسجيل اليوم" لبدء التسجيل.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      let grandBreakfastCal = 0;
+      let grandLunchCal = 0;
+      let grandDinnerCal = 0;
+      let grandTotalCal = 0;
+
+      records.forEach((rec, index) => {
+        const { done, total, pct } = calcRecordScore(rec);
+        const badgeClass = pct >= 80 ? "score-high" : (pct >= 50 ? "score-mid" : "score-low");
+
+        const bCal = getMealCalories(rec, "breakfast");
+        const lCal = getMealCalories(rec, "lunch");
+        const dCal = getMealCalories(rec, "dinner");
+        const dayTotalCal = bCal + lCal + dCal;
+
+        grandBreakfastCal += bCal;
+        grandLunchCal += lCal;
+        grandDinnerCal += dCal;
+        grandTotalCal += dayTotalCal;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="font-weight:700;">${escapeHtml(rec.day)}</td>
+          <td>${escapeHtml(rec.date)}</td>
+          <td>${renderCellContent(rec, "breakfast", true)}</td>
+          <td>${renderCellContent(rec, "lunch", true)}</td>
+          <td>${renderCellContent(rec, "dinner", true)}</td>
+          <td>${renderCellContent(rec, "water", false)}</td>
+          <td>${renderCellContent(rec, "sugar", false)}</td>
+          <td>${renderCellContent(rec, "gym", false)}</td>
+          <td>${renderCellContent(rec, "steps", false)}</td>
+          <td><span class="total-cal-badge">${dayTotalCal} سعرة</span></td>
+          <td><span class="score-badge ${badgeClass}">${done}/${total} (${pct}%)</span></td>
+          <td>
+            <button type="button" class="icon-btn" onclick="openEditDateBox(${index})" title="تعديل اليوم والتاريخ">✏️</button>
+            <button type="button" class="icon-btn" onclick="deleteRecord(${index})" title="حذف اليوم">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tfoot.innerHTML = `
+        <tr>
+          <td colspan="2">إجمالي السعرات</td>
+          <td>${grandBreakfastCal} سعرة</td>
+          <td>${grandLunchCal} سعرة</td>
+          <td>${grandDinnerCal} سعرة</td>
+          <td colspan="4">مجموع السعرات الكلي لكل الأيام</td>
+          <td><span class="total-cal-badge">${grandTotalCal} سعرة</span></td>
+          <td colspan="2"></td>
+        </tr>
+      `;
+    }
+
+    /* تعديل اليوم والتاريخ */
+    function openEditDateBox(index) {
+      const user = getCurrentUser();
+      if (!user || !user.records[index]) return;
+      editingRecordIndex = index;
+      const rec = user.records[index];
+
+      document.getElementById("edit-day-select").value = rec.day;
+      if (rec.isoDate) {
+        document.getElementById("edit-date-input").value = rec.isoDate;
+      } else {
+        const parts = rec.date.split("/");
+        if (parts.length === 3) {
+          document.getElementById("edit-date-input").value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+      }
+      document.getElementById("edit-date-box").classList.remove("hidden");
+    }
+
+    function closeEditDateBox() {
+      editingRecordIndex = null;
+      document.getElementById("edit-date-box").classList.add("hidden");
+    }
+
+    function saveEditedDate() {
+      if (editingRecordIndex === null) return;
+      const user = getCurrentUser();
+      if (!user || !user.records[editingRecordIndex]) return;
+
+      const newDay = document.getElementById("edit-day-select").value;
+      const isoVal = document.getElementById("edit-date-input").value;
+      if (!isoVal) return;
+
+      const [year, month, day] = isoVal.split("-");
+      user.records[editingRecordIndex].day = newDay;
+      user.records[editingRecordIndex].date = `${day}/${month}/${year}`;
+      user.records[editingRecordIndex].isoDate = isoVal;
+
+      updateCurrentUser(user);
+      closeEditDateBox();
+      renderTable();
+    }
+
+    function deleteRecord(index) {
+      const user = getCurrentUser();
+      if (!user) return;
+      user.records.splice(index, 1);
+      updateCurrentUser(user);
+      closeEditDateBox();
+      renderTable();
+    }
+
+    function askClearAll() {
+      document.getElementById("report-default-actions").classList.add("hidden");
+      document.getElementById("report-confirm-clear").classList.remove("hidden");
+    }
+
+    function cancelClearAll() {
+      document.getElementById("report-confirm-clear").classList.add("hidden");
+      document.getElementById("report-default-actions").classList.remove("hidden");
+    }
+
+    function clearAllRecords() {
+      const user = getCurrentUser();
+      if (!user) return;
+      user.records = [];
+      updateCurrentUser(user);
+      cancelClearAll();
+      closeEditDateBox();
+      renderTable();
+    }
+
+    /* ================= سجل المعلومات ================= */
+    function toggleInfoBox() {
+      renderUserInfoSummary();
+      document.getElementById("info-box").classList.toggle("hidden");
+    }
+
+    function renderUserInfoSummary() {
+      const user = getCurrentUser();
+      if (!user || !user.profile) return;
+      const p = user.profile;
+      document.getElementById("info-user-summary").innerHTML = `
+        <div><strong>الاسم:</strong> ${escapeHtml(p.name)}</div>
+        <div><strong>السن:</strong> ${p.age} سنة</div>
+        <div><strong>الطول:</strong> ${p.height} سم</div>
+        <div><strong>الوزن:</strong> ${p.weight} كجم</div>
+      `;
+    }
+
+    function renderStaticFoodLists() {
+      const allowedContainer = document.getElementById("allowed-foods-list");
+      allowedContainer.innerHTML = ALLOWED_FOODS.map(item => `
+        <div class="food-row">
+          <div>
+            <span class="food-name">${item.name}</span>
+            <span class="food-qty">الكمية: ${item.qty}</span>
+          </div>
+          <span class="cal-pill cal-allowed">${item.cal}</span>
+        </div>
+      `).join("");
+
+      const forbiddenContainer = document.getElementById("forbidden-foods-list");
+      forbiddenContainer.innerHTML = FORBIDDEN_FOODS.map(item => `
+        <div class="food-row">
+          <div>
+            <span class="food-name">${item.name}</span>
+            <span class="food-qty">الكمية: ${item.qty}</span>
+          </div>
+          <span class="cal-pill cal-forbidden">${item.cal}</span>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
